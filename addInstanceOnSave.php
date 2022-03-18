@@ -1,13 +1,13 @@
 <?php
 
 // Set the namespace defined in your config file
-namespace STPH\newInstanceOnSave;
+namespace STPH\addInstanceOnSave;
 
 
 // Declare your module class, which must extend AbstractExternalModule 
-class newInstanceOnSave extends \ExternalModules\AbstractExternalModule {
+class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
 
-    private $moduleName = "New Instance on Save";  
+    private $moduleName = "Add Instance on Save";  
 
    /**
     * Constructs the class
@@ -36,7 +36,7 @@ class newInstanceOnSave extends \ExternalModules\AbstractExternalModule {
         
         
 
-        print '<p class="new-instance-on-save">'.$this->helloFrom_newInstanceOnSave().'<p>';
+        print '<p class="new-instance-on-save">'.$this->helloFrom_addInstanceOnSave().'<p>';
 
     }
 
@@ -45,7 +45,7 @@ class newInstanceOnSave extends \ExternalModules\AbstractExternalModule {
     *
     * @since 1.0.0
     */    
-    public function helloFrom_newInstanceOnSave() {
+    public function helloFrom_addInstanceOnSave() {
 
                 
         return 'Hello from '.$this->moduleName;

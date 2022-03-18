@@ -1,7 +1,7 @@
 {
-    "name": "New Instance on Save",
+    "name": "Add Instance on Save",
 
-    "namespace": "STPH\\newInstanceOnSave", 
+    "namespace": "STPH\\addInstanceOnSave", 
 
     "description": "Another module made with create-redcap-module.",
 

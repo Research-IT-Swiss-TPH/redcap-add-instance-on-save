@@ -1,5 +1,5 @@
-# New Instance on Save
-Another module made with create-redcap-module.
+# Add Instance on Save
+Add new instance for a repeating instrument on saving a field in any project.
 
 ## Setup
 
