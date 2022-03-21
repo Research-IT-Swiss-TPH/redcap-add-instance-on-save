@@ -137,7 +137,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             $this->dump($sourceProjectFields);
 
             //  Check if Trigger Field value is empty (We will only add instance if trigger value is not empty)
-            if(( is_null($instruction['matching-field']) && empty($sourceProjectFields[$instruction['trigger-field']]))) continue;
+            if((empty($sourceProjectFields[$instruction['trigger-field']]))) continue;
 
             //  Define destination record id
             $destRecordId =  $instruction['matching-field'] == null ? $record :$sourceProjectFields[$instruction['matching-field']];
