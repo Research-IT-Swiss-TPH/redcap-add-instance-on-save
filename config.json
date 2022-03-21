@@ -29,7 +29,38 @@
 
     "system-settings": [],
 
-    "project-settings": [],
+    "project-settings": [
+        {
+            "key": "instructions",
+            "name": "Instruction",
+            "required": false,
+            "type": "sub_settings",
+            "repeatable": true,
+            "sub_settings": [
+                {
+                    "key": "add-enabled",
+                    "name": "Enabled?",
+                    "type": "checkbox"
+                },
+                {
+                    "key": "trigger-field",
+                    "name": "Trigger Field",
+                    "type": "field-list"
+                },
+                {
+                    "key": "destination-project",
+                    "name": "Destination Project",
+                    "type": "project-id"
+                },
+                {
+                    "key": "destination-form",
+                    "name": "Destination Form",
+                    "type": "text"
+                }
+
+            ]
+        }
+    ],
 
     "crons": [],
 
