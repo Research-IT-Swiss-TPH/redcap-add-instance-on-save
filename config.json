@@ -51,8 +51,8 @@
                 },
                 {
                     "key": "matching-field",
-                    "name": "<small class='text-info'>Leave blank if is equal to <i>trigger field</i></small><br>Matching Field",
-                    "type": "text"
+                    "name": "<small class='text-info'>Leave blank if records are equivalent.</small><br>Matching Field",
+                    "type": "field-list"
                 },
                 {
                     "key": "destination-project",
