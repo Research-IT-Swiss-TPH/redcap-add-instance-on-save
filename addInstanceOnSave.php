@@ -23,9 +23,9 @@ if( file_exists("vendor/autoload.php") ){
 class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
 
     //  Constants
-    const IS_HOOK_SIMU_ENABLED = true;
-    const IS_DUMP_ENABLED = true;
-    const IS_ADDING_ENABLED = false;
+    const IS_HOOK_SIMU_ENABLED = false;
+    const IS_DUMP_ENABLED = false;
+    const IS_ADDING_ENABLED = true;
 
     /**
      * Module's main hook
