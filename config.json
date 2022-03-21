@@ -18,7 +18,8 @@
     "framework-version": 6,
 
     "permissions": [
-        "redcap_every_page_top"
+        "redcap_every_page_top",
+        "redcap_save_record"
     ],
 
     "enable-every-page-hooks-on-system-pages": false,
@@ -45,17 +46,48 @@
                 {
                     "key": "trigger-field",
                     "name": "Trigger Field",
-                    "type": "field-list"
+                    "type": "field-list",
+                    "required":true
+                },
+                {
+                    "key": "matching-field",
+                    "name": "<small class='text-info'>Leave blank if is equal to <i>trigger field</i></small><br>Matching Field",
+                    "type": "text"
                 },
                 {
                     "key": "destination-project",
                     "name": "Destination Project",
-                    "type": "project-id"
+                    "type": "project-id",
+                    "required":true
                 },
                 {
                     "key": "destination-form",
                     "name": "Destination Form",
-                    "type": "text"
+                    "type": "text",
+                    "required":true
+                },
+                {
+                    "key": "describe-piping",
+                    "name": "<b>Field Piping</b><br>Use piping if you want to add instances with initial values piped from the triggering project. In case a <i>Destination Field</i> cannot be resolved within destination project, the whole instruction will become invalid and no instance will be added.",
+                    "type": "descriptive"
+                },
+                {
+                    "key": "field-pipings",
+                    "name": "Field Piping",
+                    "type": "sub_settings",
+                    "repeatable": true,
+                    "sub_settings": [
+                        {
+                            "key": "source-field",
+                            "name": "Source Field",
+                            "type": "field-list"
+                        },
+                        {
+                            "key": "destination-field",
+                            "name": "<small class='text-info'>Leave blank if identical to <i>Source Field</i></small><br>Destination Field",
+                            "type": "text"
+                        }
+                    ]
                 }
 
             ]
