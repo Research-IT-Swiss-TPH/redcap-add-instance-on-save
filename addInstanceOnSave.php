@@ -137,7 +137,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             $this->dump($sourceProjectFields);
 
             //  Check if Trigger Field value is empty (We will only add instance if trigger value is not empty)
-            if((empty($sourceProjectFields[$instruction['trigger-field']]))) continue;
+            if(( is_null($instruction['matching-field']) && empty($sourceProjectFields[$instruction['trigger-field']]))) continue;
 
             //  Define destination record id
             $destRecordId =  $instruction['matching-field'] == null ? $record :$sourceProjectFields[$instruction['matching-field']];
@@ -182,7 +182,8 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             //  Add instance
             if(self::IS_ADDING_ENABLED) {
             $added_instance = $this->add_instance($destProjectId, $destRecordId, $destEventId, $destInstanceId, $destFieldValues);
-            REDCap::logEvent("Instance added", json_encode($added_instance));
+            //REDCap::logEvent("Instance added", json_encode($added_instance));
+            $this->dump($added_instance);
             }
 
         }
