@@ -1,5 +1,5 @@
 # Add Instance on Save
-Add new instance for a repeating instrument on saving a field in any project.
+Add new instance to a record of an repeating instance by saving any field on any project. Additionaly, define piping fields to set the initial values of fields within the newly added instance.
 
 ## Setup
 

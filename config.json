@@ -3,7 +3,7 @@
 
     "namespace": "STPH\\addInstanceOnSave", 
 
-    "description": "Another module made with create-redcap-module.",
+    "description": "Add new instance to a record of an repeating instance by saving any field on any project. Additionaly, define piping fields to set the initial values of fields within the newly added instance.",
 
     "documentation": "README.md",
 
@@ -98,6 +98,6 @@
 
     "compatibility": {
         "php-version-min": "5.4.0",
-        "redcap-version-min": "8.0.0"
+        "redcap-version-min": "10.6.28"
     }
  }
