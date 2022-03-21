@@ -7,26 +7,23 @@ Install the module from REDCap module repository and enable over Control Center.
 
 ## Configuration
 
-- Setting 1: Do this for that
-- Setting 2: Do this for that
+Instrutions are sets of settings that will realize the instance addition.
+- Enabled: Check to enable the instruction.
+- Trigger Field: Field that triggers the instance addition. Only if trigger field value is not empty.
+- Matching Field: The field that defines the destination record id. Leave empty if record IDs of source and destination projects are equal.
+- Destination Project: Project ID of Destination Project. 
+- Destination Form: Name of Destination Form.
+Field Piping: Use piping if you want to add instances with initial values piped from the triggering project. In case a Destination Field cannot be resolved within destination project, the whole instruction will become invalid and no instance will be added.
+Multiple Field Pipings per Instruction can be added:
+- Source Field: The field where the value should be piped from.
+- Destination Field: The target field where to value should be piped to. You can leave this empty if the destination field has the same name as the source field.
 
-
-## Testing
-
-Run your tests that are written within your `/tests` folder:
-
-```bash
-    ./vendor/bin/phpunit tests
-``` 
-Read more about PHP Unit Testing in the official [PHPUnit Manual](https://phpunit.readthedocs.io/en/9.5/index.html).
-
-
-## Roadmap
-
-- Feature 1
-- Feature 2
 
 ## Developer Notice
+Adjust constants to improve developer experience.
+Run `$ composer install` for formatted dumps.
+
+Credits to @lsgs and the [Copy Data on Save](https://github.com/lsgs/redcap-copy-data-on-save) module developed by him which served as a fundament for this module.
 
 ## Changelog
 
