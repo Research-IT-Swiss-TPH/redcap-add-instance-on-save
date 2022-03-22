@@ -24,7 +24,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
 
     //  Constants
     const IS_HOOK_SIMU_ENABLED = false;
-    const IS_DUMP_ENABLED = false;
+    const IS_DUMP_ENABLED = true;
     const IS_ADDING_ENABLED = true;
 
     /**
@@ -181,7 +181,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
 
             //  Add instance
             if(self::IS_ADDING_ENABLED) {
-            $added_instance = $this->add_instance($destProjectId, $destRecordId, $destEventId, $destInstanceId, $destFieldValues);
+            $added_instance = $this->add_instance($destProjectId, $destRecordId, $destEventId, $destInstanceId, $destFieldValues, $instruction);
             //REDCap::logEvent("Instance added", json_encode($added_instance));
             $this->dump($added_instance);
             }
@@ -202,7 +202,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
      * @return array
      * @since 1.0.0
      */
-    private function add_instance($destProjectId, $destRecordId, $destEventId, $destInstanceId, $destFieldValues) {
+    private function add_instance($destProjectId, $destRecordId, $destEventId, $destInstanceId, $destFieldValues, $instruction) {
 
         //  Construct array to save data
         $dataToSave = [
@@ -219,7 +219,9 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
 
 
         try {
-            $saved = REDCap::saveData($destProjectId, 'array', $dataToSave);
+            //  Do not skip calculated fields 
+            $skipCalc = !$instruction['calc-enabled'];
+            $saved = REDCap::saveData($destProjectId, 'array', $dataToSave, 'overwrite', 'YMD', 'flat', null, true, true, true, false, $skipCalc);
             return $saved;
         } catch(\Exception $e) {
             $this->dump($e);
@@ -234,7 +236,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
      * @since 1.0.0
      */
     private function dump($content) {
-        if(function_exists('dump') && self::IS_HOOK_SIMU_ENABLED && self::IS_DUMP_ENABLED ){
+        if(function_exists('dump') && self::IS_DUMP_ENABLED ){
             dump($content);
         }
     }

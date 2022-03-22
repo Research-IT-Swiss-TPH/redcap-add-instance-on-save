@@ -72,6 +72,11 @@
                     "type": "descriptive"
                 },
                 {
+                    "key": "calc-enabled",
+                    "name": "Enable Piping for calculated fields?",
+                    "type": "checkbox"                    
+                },
+                {
                     "key": "field-pipings",
                     "name": "Field Piping",
                     "type": "sub_settings",
