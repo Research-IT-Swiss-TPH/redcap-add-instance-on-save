@@ -24,7 +24,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
 
     //  Constants
     const IS_HOOK_SIMU_ENABLED = false;
-    const IS_DUMP_ENABLED = true;
+    const IS_DUMP_ENABLED = false;
     const IS_ADDING_ENABLED = true;
 
     /**
@@ -109,7 +109,8 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
 
             //  Retrieve destination project data
             $destProject = new \Project( $destProjectId );
-            $this->dump($destProject);
+            $destPrimaryKey = $destProject->table_pk;
+            //$this->dump($destProject);
 
             //  Get destination event id (as first event id)
             $destEventId = $destProject->firstEventId;
@@ -119,7 +120,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
 
             //  Get Source Project Meta Data
             $sourceProjectMeta = $Proj->metadata;
-            $this->dump($sourceProjectMeta);
+            //$this->dump($sourceProjectMeta);
 
             //  Check if trigger field exists in Source Project (redundant)
             if( !array_key_exists($instruction['trigger-field'] ,$sourceProjectMeta) ) continue;
@@ -134,14 +135,14 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
                 'fields' => [],
                 'exportDataAccessGroups' => true
             ))[$record][$event_id];
-            $this->dump($sourceProjectFields);
+            //$this->dump($sourceProjectFields);
 
             //  Check if Trigger Field value is empty (We will only add instance if trigger value is not empty)
             if((empty($sourceProjectFields[$instruction['trigger-field']]))) continue;
 
             //  Define destination record id
             $destRecordId =  $instruction['matching-field'] == null ? $record :$sourceProjectFields[$instruction['matching-field']];
-            $this->dump($destRecordId);
+            //$this->dump($destRecordId);
 
             $destProjectFields = REDCap::getData(array(
                 'return_format' => 'array', 
@@ -153,7 +154,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             
             //  Check if destination record exists
             if( is_null($destProjectFields) ) continue;
-            $this->dump($destProjectFields);
+            //$this->dump($destProjectFields);
             
             //  Calculate destination instance id from current count + 1
             $destInstanceId = count($destProjectFields[$destRecordId]['repeat_instances'][$destEventId][$instruction['destination-form']]) + 1;
@@ -177,13 +178,39 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
 
             //  Break if invalid piping
             if(count($invalid_pipings) > 0) continue;
-            $this->dump( $destFieldValues);
+            //$this->dump( $destFieldValues);
 
             //  Add instance
             if(self::IS_ADDING_ENABLED) {
-            $added_instance = $this->add_instance($destProjectId, $destRecordId, $destEventId, $destInstanceId, $destFieldValues, $instruction);
-            //REDCap::logEvent("Instance added", json_encode($added_instance));
-            $this->dump($added_instance);
+                $added_instance = $this->add_instance($destProjectId, $destRecordId, $destEventId, $destInstanceId, $destFieldValues, $instruction);
+                //REDCap::logEvent("Instance added", json_encode($added_instance));
+                $this->dump($added_instance);
+            }
+
+            /**
+             * Ugly Fix for an issue with REDCap::saveData() where adding an instance to an already existing record will duplicate an entry
+             * for its primary key. The below correction ensures that there are no duplicates and the database does not corrupted. 
+             * 
+             * Could be replaced by adjusting the call of saveData()
+             * 
+             * @since 1.1.0
+             */            
+            if($destInstanceId == 1) {
+
+                //  First fetch all matching records
+                $sql = 'SELECT record FROM redcap_data WHERE project_id=? AND record=? AND field_name=? AND instance IS NULL';
+                $result = $this->query($sql, [$destProjectId, $destRecordId, $destPrimaryKey]);
+                $rows = [];
+                while($row = $result->fetch_object()) {
+                   $rows[] = $row;
+                }
+
+                //  Only delete exactly one record if there are more than one
+                if(count($rows) > 1) {                        
+                    $sql_delete = 'DELETE FROM redcap_data WHERE project_id=? AND record=? AND field_name=? AND instance IS NULL LIMIT 1';
+                    $this->query($sql_delete, [$destProjectId, $destRecordId, $destPrimaryKey]);
+                }
+
             }
 
         }
