@@ -209,7 +209,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             $destRecordId => [
                 "repeat_instances" => [
                     $destEventId => [
-                        "sessions" => [
+                        $instruction['destination-form'] => [
                             $destInstanceId => $destFieldValues
                         ]
                     ]
