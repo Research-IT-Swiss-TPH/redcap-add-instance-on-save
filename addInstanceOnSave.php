@@ -106,6 +106,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             $this->dump($instruction);
 
             $destProjectId = $instruction['destination-project'];
+            $destForm = $instruction['destination-form'];
 
             //  Retrieve destination project data
             $destProject = new \Project( $destProjectId );
@@ -116,7 +117,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             $destEventId = $destProject->firstEventId;
 
             //  Check if destination form is repeating
-            if(!($destProject-> isRepeatingForm($destEventId, $instruction['destination-form']))) continue;
+            if(!($destProject-> isRepeatingForm($destEventId, $destForm))) continue;
 
             //  Get Source Project Meta Data
             $sourceProjectMeta = $Proj->metadata;
@@ -157,7 +158,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             //$this->dump($destProjectFields);
             
             //  Calculate destination instance id from current count + 1
-            $destInstanceId = count($destProjectFields[$destRecordId]['repeat_instances'][$destEventId][$instruction['destination-form']]) + 1;
+            $destInstanceId = count($destProjectFields[$destRecordId]['repeat_instances'][$destEventId][$destForm]) + 1;
             $this->dump($destInstanceId);
 
             $invalid_pipings = [];
@@ -182,7 +183,10 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
 
             //  Add instance
             if(self::IS_ADDING_ENABLED) {
-                $added_instance = $this->add_instance($destProjectId, $destRecordId, $destEventId, $destInstanceId, $destFieldValues, $instruction);
+                
+                $dataToAdd = [$destRecordId => ["repeat_instances" => [$destEventId => [$destForm => [$destInstanceId => $destFieldValues]]]]];
+
+                $added_instance = $this->add_instance($destProjectId, $dataToAdd, !$instruction['calc-enabled'] );
                 //REDCap::logEvent("Instance added", json_encode($added_instance));
                 $this->dump($added_instance);
             }
@@ -220,35 +224,24 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
     /**
      * Adds instance to existing record of destination project
      * 
-     * @param string $destProjectId
-     * @param string $destRecordId
-     * @param string $destEventId
-     * @param string $destInstanceId
-     * @param array $destFieldValues
+     * @param string $project_id
+     * @param string $data
+     * @param string $skipCalcFields
      * 
      * @return array
      * @since 1.0.0
      */
-    private function add_instance($destProjectId, $destRecordId, $destEventId, $destInstanceId, $destFieldValues, $instruction) {
-
-        //  Construct array to save data
-        $dataToSave = [
-            $destRecordId => [
-                "repeat_instances" => [
-                    $destEventId => [
-                        $instruction['destination-form'] => [
-                            $destInstanceId => $destFieldValues
-                        ]
-                    ]
-                ]
-            ]
-        ];
-
+    private function add_instance($project_id, $data, $skipCalcFields) {
 
         try {
-            //  Do not skip calculated fields 
-            $skipCalc = !$instruction['calc-enabled'];
-            $saved = REDCap::saveData($destProjectId, 'array', $dataToSave, 'overwrite', 'YMD', 'flat', null, true, true, true, false, $skipCalc);
+
+            $args = [
+                'project_id' => $project_id,
+                'data' => $data,
+                'skipCalcFields' => $skipCalcFields
+            ];
+
+            $saved = REDCap::saveData($args);
             return $saved;
         } catch(\Exception $e) {
             $this->dump($e);
