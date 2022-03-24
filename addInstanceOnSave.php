@@ -181,12 +181,28 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             if(count($invalid_pipings) > 0) continue;
             //$this->dump( $destFieldValues);
 
+
             if(self::IS_ADDING_ENABLED) {
                 
                 //  Add instance
                 $dataToAdd = [$destRecordId => ["repeat_instances" => [$destEventId => [$destForm => [$destInstanceId => $destFieldValues]]]]];
                 $added_instance = $this->add_instance($destProjectId, $dataToAdd);
                 //$this->dump($added_instance);
+
+                //  Save current instance id to field if enabled
+                if(!empty($instruction['instance-id-target'])) {
+
+                    $json_data = '[{"'.$Proj->table_pk.'":"'.$record.'","'.$instruction["instance-id-target"].'":"'.$destInstanceId.'"}]';
+                    $params = array(
+                        'dataFormat'=>'json', 
+                        'type'=>'flat', 
+                        'data'=>$json_data
+                    );
+
+                    $repsonse = REDCap::saveData($params);
+                    $this->dump($repsonse);
+
+                }
 
             }
 

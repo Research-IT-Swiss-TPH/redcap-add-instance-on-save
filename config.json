@@ -67,6 +67,11 @@
                     "required":true
                 },
                 {
+                    "key": "instance-id-target",
+                    "name": "<small class='text-info'>Use this if you want to keep track of the id of added instance. Leave blank if not.</small><br>Instance ID Target",
+                    "type": "field-list"
+                },
+                {
                     "key": "describe-piping",
                     "name": "<b>Field Piping</b><br>Use piping if you want to add instances with initial values piped from the triggering project. In case a <i>Destination Field</i> cannot be resolved within destination project, the whole instruction will become invalid and no instance will be added.",
                     "type": "descriptive"
