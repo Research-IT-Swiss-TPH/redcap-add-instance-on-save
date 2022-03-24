@@ -70,12 +70,7 @@
                     "key": "describe-piping",
                     "name": "<b>Field Piping</b><br>Use piping if you want to add instances with initial values piped from the triggering project. In case a <i>Destination Field</i> cannot be resolved within destination project, the whole instruction will become invalid and no instance will be added.",
                     "type": "descriptive"
-                },
-                {
-                    "key": "calc-enabled",
-                    "name": "Enable Piping for calculated fields?",
-                    "type": "checkbox"                    
-                },
+                },                
                 {
                     "key": "field-pipings",
                     "name": "Field Piping",

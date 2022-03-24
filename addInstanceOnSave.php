@@ -103,7 +103,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
 
             //  Check if instruction is enabled
             if (!$instruction['add-enabled']) continue;
-            $this->dump($instruction);
+            //$this->dump($instruction);
 
             $destProjectId = $instruction['destination-project'];
             $destForm = $instruction['destination-form'];
@@ -116,17 +116,17 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             //  Get destination event id (as first event id)
             $destEventId = $destProject->firstEventId;
 
-            //  Check if destination form is repeating
+            //  Skip if destination form is repeating
             if(!($destProject-> isRepeatingForm($destEventId, $destForm))) continue;
 
             //  Get Source Project Meta Data
             $sourceProjectMeta = $Proj->metadata;
             //$this->dump($sourceProjectMeta);
 
-            //  Check if trigger field exists in Source Project (redundant)
+            //  Skip if trigger field exists in Source Project (redundant)
             if( !array_key_exists($instruction['trigger-field'] ,$sourceProjectMeta) ) continue;
 
-            //  Check if trigger field is on current instrument page
+            //  Skip if trigger field is on current instrument page
             if( $sourceProjectMeta[$instruction['trigger-field']]['form_name'] != $instrument ) continue;
 
             //  Get Source Project Trigger Field Value
@@ -138,7 +138,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             ))[$record][$event_id];
             //$this->dump($sourceProjectFields);
 
-            //  Check if Trigger Field value is empty (We will only add instance if trigger value is not empty)
+            //  Skip if Trigger Field value is empty (We will only add instance if trigger value is not empty)
             if((empty($sourceProjectFields[$instruction['trigger-field']]))) continue;
 
             //  Define destination record id
@@ -153,13 +153,13 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
                 'exportDataAccessGroups' => true
             ));
             
-            //  Check if destination record exists
+            //  Skip if destination record exists
             if( is_null($destProjectFields) ) continue;
             //$this->dump($destProjectFields);
             
             //  Calculate destination instance id from current count + 1
             $destInstanceId = count($destProjectFields[$destRecordId]['repeat_instances'][$destEventId][$destForm]) + 1;
-            $this->dump($destInstanceId);
+            //$this->dump($destInstanceId);
 
             $invalid_pipings = [];
             $destFieldValues = [];
@@ -177,18 +177,17 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
                 }
             }
 
-            //  Break if invalid piping
+            //  Skip if invalid piping
             if(count($invalid_pipings) > 0) continue;
             //$this->dump( $destFieldValues);
 
-            //  Add instance
             if(self::IS_ADDING_ENABLED) {
                 
+                //  Add instance
                 $dataToAdd = [$destRecordId => ["repeat_instances" => [$destEventId => [$destForm => [$destInstanceId => $destFieldValues]]]]];
+                $added_instance = $this->add_instance($destProjectId, $dataToAdd);
+                //$this->dump($added_instance);
 
-                $added_instance = $this->add_instance($destProjectId, $dataToAdd, !$instruction['calc-enabled'] );
-                //REDCap::logEvent("Instance added", json_encode($added_instance));
-                $this->dump($added_instance);
             }
 
             /**
@@ -208,6 +207,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
                 while($row = $result->fetch_object()) {
                    $rows[] = $row;
                 }
+                $this->dump($rows);
 
                 //  Only delete exactly one record if there are more than one
                 if(count($rows) > 1) {                        
@@ -231,14 +231,13 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
      * @return array
      * @since 1.0.0
      */
-    private function add_instance($project_id, $data, $skipCalcFields) {
+    private function add_instance($project_id, $data) {
 
         try {
 
             $args = [
                 'project_id' => $project_id,
-                'data' => $data,
-                'skipCalcFields' => $skipCalcFields
+                'data' => $data
             ];
 
             $saved = REDCap::saveData($args);
