@@ -191,29 +191,19 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             }
 
             /**
-             * Ugly Fix for an issue with REDCap::saveData() where adding an instance to an already existing record will duplicate an entry
-             * for its primary key. The below correction ensures that there are no duplicates and the database does not corrupted. 
-             * 
-             * Could be replaced by adjusting the call of saveData()
+             * Ugly Fix for an issue with REDCap::saveData() where adding first instance to an already existing record will duplicate an entry
+             * for its primary key. The below correction ensures that there are no duplicates and the database does not get corrupted.
              * 
              * @since 1.1.0
              */            
             if($destInstanceId == 1) {
-
-                //  First fetch all matching records
-                $sql = 'SELECT record FROM redcap_data WHERE project_id=? AND record=? AND field_name=? AND instance IS NULL';
-                $result = $this->query($sql, [$destProjectId, $destRecordId, $destPrimaryKey]);
-                $rows = [];
-                while($row = $result->fetch_object()) {
-                   $rows[] = $row;
-                }
-                $this->dump($rows);
-
-                //  Only delete exactly one record if there are more than one
-                if(count($rows) > 1) {                        
-                    $sql_delete = 'DELETE FROM redcap_data WHERE project_id=? AND record=? AND field_name=? AND instance IS NULL LIMIT 1';
-                    $this->query($sql_delete, [$destProjectId, $destRecordId, $destPrimaryKey]);
-                }
+                do {                    
+                    $this->delete_duplicate_row(
+                        $destProjectId, 
+                        $destRecordId, 
+                        $destPrimaryKey
+                    );                    
+                } while ($this->get_row_count($destProjectId, $destRecordId, $destPrimaryKey) > 1);
 
             }
 
@@ -246,6 +236,21 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             $this->dump($e);
         }
 
+    }
+
+    private function get_row_count($pid, $record, $pk) {
+        $sql_select = 'SELECT record FROM redcap_data WHERE project_id=? AND record=? AND field_name=? AND instance IS NULL';
+        $result = $this->query($sql_select, [$pid, $record, $pk]);
+        $rows = [];
+        while($row = $result->fetch_object()) {
+           $rows[] = $row;
+        }
+        return count($rows);
+    }
+
+    private function delete_duplicate_row($pid, $record, $pk) {
+        $sql_delete = 'DELETE FROM redcap_data WHERE project_id=? AND record=? AND field_name=? AND instance IS NULL LIMIT 1';
+        $this->query($sql_delete, [$pid, $record, $pk]);
     }
 
     /**
