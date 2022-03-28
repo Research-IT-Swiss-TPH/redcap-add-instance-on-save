@@ -17,7 +17,7 @@ Field Piping: Use piping if you want to add instances with initial values piped 
 Multiple Field Pipings per Instruction can be added:
 - Source Field: The field where the value should be piped from.
 - Destination Field: The target field where to value should be piped to. You can leave this empty if the destination field has the same name as the source field.
-
+- Instance ID Target: The field where to save information of currently added instance count/id.
 
 ## Developer Notice
 Adjust constants to improve developer experience.
@@ -30,3 +30,5 @@ Credits to @lsgs and the [Copy Data on Save](https://github.com/lsgs/redcap-copy
 Version | Description
 ------- | --------------------
 v1.0.0  | Initial release.
+v1.1.0  | Several improvements. New Setting: Instance ID Target to save current instance count in Source Project.
+v1.2.0  | Indicate trigger fields in Data Entry Page and show details Dialog.
