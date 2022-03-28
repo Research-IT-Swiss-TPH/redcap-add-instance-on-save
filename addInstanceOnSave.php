@@ -35,11 +35,11 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
      */
     function redcap_save_record($project_id, $record=null, $instrument, $event_id, $group_id=null, $survey_hash=null, $response_id=null, $repeat_instance=1) {
         
+
         //  Check if is Data Entry Page (later on we can add support for Survey Pages if we need)
         if($this->isPage("DataEntry/index.php")) {           
             $this->run_instructions($record, $instrument, $event_id);
         }
-
     }
 
    /**
@@ -48,6 +48,26 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
     * @since 1.0.0
     */
     public function redcap_every_page_top($project_id = null) {
+
+        if($this->isPage('DataEntry/index.php')) {
+            global $Proj;
+            $instructions = $this->getSubSettings('instructions');            
+
+            foreach ($instructions as $key => $instruction) {
+                $isRelevantFormPage = $Proj->metadata[$instruction['trigger-field']]['form_name'] == $_GET['page'];
+                
+                if($isRelevantFormPage) {
+
+                    // Prepare parameter array to be passed to Javascript Include
+                    $js_params = array (                        
+                        "instruction" => $instruction
+                    );
+                    $this->includePageJavascript($js_params);
+                }
+                
+                break;                
+            }
+        }
 
         if(self::IS_HOOK_SIMU_ENABLED) {
             //  Simulate Save (has to be triggered within record context, otherwise no ID)
@@ -226,6 +246,30 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
         }
 
     }
+
+    /**
+     * Includes Page Javascript
+     * 
+     * @param array $params
+     * 
+     * @return void
+     * @since 1.2.0
+     * 
+     */
+    private function includePageJavascript($params) {
+
+        ?>
+        <script src="<?php print $this->getUrl('js/aios.js'); ?>"></script>
+        <script>
+            STPH_aios.params = <?= json_encode($params) ?>;            
+            $(function() {
+                $(document).ready(function(){
+                    STPH_aios.init();
+                })
+            });            
+        </script>
+        <?php
+    }    
 
     /**
      * Adds instance to existing record of destination project
