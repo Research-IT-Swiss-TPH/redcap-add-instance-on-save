@@ -43,7 +43,8 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
     }
 
    /**
-    * Only used during development
+    * Hook needed to include parameters
+    * simulate_save_hook(): Only used during development
     * @return void
     * @since 1.0.0
     */
@@ -51,7 +52,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
 
         if($this->isPage('DataEntry/index.php')) {
             global $Proj;
-            $instructions = $this->getSubSettings('instructions');            
+            $instructions = $this->getSubSettings('instructions');
 
             foreach ($instructions as $key => $instruction) {
                 $isRelevantFormPage = $Proj->metadata[$instruction['trigger-field']]['form_name'] == $_GET['page'];
@@ -261,6 +262,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
         ?>
         <script src="<?php print $this->getUrl('js/aios.js'); ?>"></script>
         <script>
+            STPH_aios.enable_debug = <?= $this->getProjectSetting("javascript-debug") ?>;
             STPH_aios.params = <?= json_encode($params) ?>;            
             $(function() {
                 $(document).ready(function(){

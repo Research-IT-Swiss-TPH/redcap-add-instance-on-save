@@ -32,6 +32,11 @@
 
     "project-settings": [
         {
+            "key": "javascript-debug",
+            "type": "checkbox",
+            "name": "Enable Javascript Debug"
+        },
+        {
             "key": "instructions",
             "name": "Instruction",
             "required": false,
