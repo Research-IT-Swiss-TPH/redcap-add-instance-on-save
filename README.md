@@ -23,7 +23,7 @@ Multiple Field Pipings per Instruction can be added:
 Adjust constants to improve developer experience.
 Run `$ composer install` for formatted dumps.
 
-Credits to @lsgs and the [Copy Data on Save](https://github.com/lsgs/redcap-copy-data-on-save) module developed by him which served as a fundament for this module.
+Credits to [Copy Data on Save](https://github.com/lsgs/redcap-copy-data-on-save) module.
 
 ## Changelog
 
@@ -32,3 +32,4 @@ Version | Description
 v1.0.0  | Initial release.
 v1.1.0  | Several improvements. New Setting: Instance ID Target to save current instance count in Source Project.
 v1.2.0  | Indicate trigger fields in Data Entry Page and show details Dialog.
+v2.0.0  | Upgrade to Module Framework version 9.
