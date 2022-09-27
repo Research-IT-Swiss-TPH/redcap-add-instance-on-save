@@ -262,7 +262,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
         ?>
         <script src="<?php print $this->getUrl('js/aios.js'); ?>"></script>
         <script>
-            STPH_aios.enable_debug = <?= $this->getProjectSetting("javascript-debug") ?>;
+            STPH_aios.enable_debug = <?= json_encode((bool) $this->getProjectSetting("javascript-debug")) ?>;
             STPH_aios.params = <?= json_encode($params) ?>;            
             $(function() {
                 $(document).ready(function(){
