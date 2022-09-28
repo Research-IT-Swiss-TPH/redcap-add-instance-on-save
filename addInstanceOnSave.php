@@ -179,7 +179,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             //$this->dump($destProjectFields);
             
             //  Calculate destination instance id from current count + 1
-            $destInstanceId = count($destProjectFields[$destRecordId]['repeat_instances'][$destEventId][$destForm]) + 1;
+            $destInstanceId = count((array)$destProjectFields[$destRecordId]['repeat_instances'][$destEventId][$destForm]) + 1;
             //$this->dump($destInstanceId);
 
             $invalid_pipings = [];
