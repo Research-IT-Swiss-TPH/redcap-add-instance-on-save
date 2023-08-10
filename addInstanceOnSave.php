@@ -131,13 +131,17 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
 
             //  Retrieve destination project data
             $destProject = new \Project( $destProjectId );
+
+            //  Skip if destination project is longitudinal
+            if($destProject->longitudinal) continue;
+
             $destPrimaryKey = $destProject->table_pk;
             //$this->dump($destProject);
 
             //  Get destination event id (as first event id)
             $destEventId = $destProject->firstEventId;
 
-            //  Skip if destination form is repeating
+            //  Skip if destination form is NOT repeating
             if(!($destProject-> isRepeatingForm($destEventId, $destForm))) continue;
 
             //  Get Source Project Meta Data

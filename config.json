@@ -61,13 +61,13 @@
                 },
                 {
                     "key": "destination-project",
-                    "name": "Destination Project",
+                    "name": "<small class='text-danger'>Limitation: Longitudinal projects are not supported!</small><br>Destination Project",
                     "type": "project-id",
                     "required":true
                 },
                 {
                     "key": "destination-form",
-                    "name": "Destination Form",
+                    "name": "<small class='text-danger'>Has to be a repeating form!</small><br>Destination Form",
                     "type": "text",
                     "required":true
                 },
