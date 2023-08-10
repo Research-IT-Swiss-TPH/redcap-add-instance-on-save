@@ -1,6 +1,8 @@
 # Add Instance on Save
 Add new instance to a record of an repeating instance by saving any field on any project. Additionaly, define piping fields to set the initial values of fields within the newly added instance.
 
+**Limitation**: This module does not support longitudinal projects with multiple events. It will fail without an error message, since the module always uses the first event id in the project.
+
 ## Setup
 
 Install the module from REDCap module repository and enable over Control Center.
