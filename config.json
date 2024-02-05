@@ -15,12 +15,7 @@
          }
      ],
 
-    "framework-version": 9,
-
-    "permissions": [
-        "redcap_every_page_top",
-        "redcap_save_record"
-    ],
+    "framework-version": 15,
 
     "enable-every-page-hooks-on-system-pages": false,
 
@@ -107,7 +102,6 @@
     "crons": [],
 
     "compatibility": {
-        "php-version-min": "7.2.5",
-        "redcap-version-min": "12.0.4"
+        "php-version-min": "8.0.0"
     }
  }
