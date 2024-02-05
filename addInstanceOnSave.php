@@ -54,21 +54,19 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             global $Proj;
             $instructions = $this->getSubSettings('instructions');
 
-            foreach ($instructions as $key => $instruction) {
-                $isRelevantFormPage = $Proj->metadata[$instruction['trigger-field']]['form_name'] == $_GET['page'];
+            $js_instructions = [];
+
+            //  push all relevant instructions to array for passing into JavaScript
+            foreach ($instructions as $key => $instruction) {                
+                $isRelevantFormPage = $Proj->metadata[$instruction['trigger-field']]['form_name'] === $_GET['page'];
                 
                 if($isRelevantFormPage) {
-
-                    // Prepare parameter array to be passed to Javascript Include
-                    $js_params = array (                        
-                        "instruction" => $instruction
-                    );
-                    $this->includePageJavascript($js_params);
-                }
-                
-                break;                
+                    $js_instructions[] = $instruction;
+                }                
             }
         }
+
+        $this->includePageJavascript($js_instructions);
 
         if(self::IS_HOOK_SIMU_ENABLED) {
             //  Simulate Save (has to be triggered within record context, otherwise no ID)
@@ -261,13 +259,13 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
      * @since 1.2.0
      * 
      */
-    private function includePageJavascript($params) {
+    private function includePageJavascript($instructions) {
 
         ?>
         <script src="<?php print $this->getUrl('js/aios.js'); ?>"></script>
         <script>
             STPH_aios.enable_debug = <?= json_encode((bool) $this->getProjectSetting("javascript-debug")) ?>;
-            STPH_aios.params = <?= json_encode($params) ?>;            
+            STPH_aios.instructions = <?= json_encode($instructions) ?>;
             $(function() {
                 $(document).ready(function(){
                     STPH_aios.init();
