@@ -51,12 +51,18 @@ STPH_aios.showDetails = function(index) {
     var iconEnabled = '<span><i style="color:green;" class="fa-solid fa-circle-check"></i></span>'
     var iconDisabled = '<span><i style="color:red;" class="fa-solid fa-circle-xmark"></i></span>'
 
+    var iconSurveyEnabled = '<span><i style="color:green;" class="fa-solid fa-square-poll-horizontal"></i></span>'
+    var iconSurveyDisabled = '<span><i style="color:red;" class="fa-solid fa-square-poll-horizontal"></i></span>'
+
     //  Prepare HTML Contents (paragraph, table header, table body)
     var paragraph = '<p>Listed below are the details of <b>Add Instance on Save</b> module instructions for trigger field <b>'+instruction['trigger-field']+'</b></p>'
 
     var isEnabled = instruction["add-enabled"]
 
     var state = isEnabled ? "<p>"+iconEnabled+" This instruction is enabled.</p>" : "<p>"+iconDisabled+" This instruction is <b>not</b> enabled.</p>"
+
+    var SurveyOn = instruction["add-enabled-survey"]
+    var survey  = SurveyOn ? '<p>'+iconSurveyEnabled+' Active on surveys</p>' : '<p>'+iconSurveyDisabled+' Not active on surveys</p>'
 
     var table_1_body = '<td class="label_header" style="padding:5px 8px;width:100px;">Destination Project</td><td class="label_header" style="padding:5px 8px;width:150px;">Destination Form</td><td class="label_header" style="padding:5px 8px;">Field Pipings</td><td class="label_header" style="padding:5px 8px;width:100px;">Instance ID target</td>'
     var table_1 = '<table class="form_border" style="table-layout:fixed;border:1px solid #ddd;width:100%;"><tbody><tr>'+ table_1_body + '</tr></tbody></table>';
@@ -76,7 +82,7 @@ STPH_aios.showDetails = function(index) {
 
     //  Set Dialog HTML Contents
     var html = ''
-    html = paragraph + state + aios_1 + aios_2;       
+    html = paragraph + state + survey + aios_1 + aios_2;       
 
     $('#aios-details-'+index).html(html);
 

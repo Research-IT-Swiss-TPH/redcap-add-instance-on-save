@@ -44,6 +44,11 @@
                     "type": "checkbox"
                 },
                 {
+                    "key": "add-enabled-survey",
+                    "name": "Use in surveys?",
+                    "type": "checkbox"
+                },
+                {
                     "key": "trigger-field",
                     "name": "Trigger Field",
                     "type": "field-list",

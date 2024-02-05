@@ -35,10 +35,13 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
      */
     function redcap_save_record($project_id, $record=null, $instrument, $event_id, $group_id=null, $survey_hash=null, $response_id=null, $repeat_instance=1) {
         
-
         //  Check if is Data Entry Page (later on we can add support for Survey Pages if we need)
         if($this->isPage("DataEntry/index.php")) {           
             $this->run_instructions($record, $instrument, $event_id);
+        }
+
+        if($this->isSurveyPage()) {
+            $this->run_instructions($record, $instrument, $event_id, true);
         }
     }
 
@@ -62,7 +65,7 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
                 
                 if($isRelevantFormPage) {
                     $js_instructions[] = $instruction;
-                }                
+                }
             }
 
             $this->includePageJavascript($js_instructions);
@@ -114,16 +117,21 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
      * @return void
      * @since 1.0.0
      */
-    private function run_instructions($record, $instrument, $event_id) {
+    private function run_instructions($record, $instrument, $event_id, $isSurveyPage=false) {
 
         global $Proj;
         $instructions = $this->getSubSettings('instructions');
 
         foreach($instructions as $instruction) {
 
-            //  Check if instruction is enabled
+            //  Skip if instruction is not enabled
             if (!$instruction['add-enabled']) continue;
             //$this->dump($instruction);
+
+            //  Skip if call is from survey page and survey is not enabled
+            if ( $isSurveyPage) {
+                if (!$instruction['add-enabled-survey']) continue;
+            };
 
             $destProjectId = $instruction['destination-project'];
             $destForm = $instruction['destination-form'];
