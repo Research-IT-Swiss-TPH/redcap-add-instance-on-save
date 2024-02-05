@@ -64,9 +64,10 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
                     $js_instructions[] = $instruction;
                 }                
             }
+
+            $this->includePageJavascript($js_instructions);
         }
 
-        $this->includePageJavascript($js_instructions);
 
         if(self::IS_HOOK_SIMU_ENABLED) {
             //  Simulate Save (has to be triggered within record context, otherwise no ID)
