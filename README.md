@@ -55,3 +55,5 @@ v1.0.0  | Initial release.
 v1.1.0  | Several improvements. New Setting: Instance ID Target to save current instance count in Source Project.
 v1.2.0  | Indicate trigger fields in Data Entry Page and show details Dialog.
 v2.0.0  | Upgrade to Module Framework version 9.
+v2.2.0  | Add Survey Mode Support
+v2.3.0  | Add support for multiple redcap_data tables.
