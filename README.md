@@ -21,7 +21,7 @@ Multiple Field Pipings per Instruction can be added:
 - Destination Field: The target field where to value should be piped to. You can leave this empty if the destination field has the same name as the source field.
 - Instance ID Target: The field where to save information of currently added instance count/id.
 
-# Szenarios
+## Szenarios
 
 **Szenario 1: Add instance within same project**
 
@@ -35,6 +35,14 @@ Then a new instance of "Destination Form" will be created, if triggered from "Tr
 
 ## Developer Notice
 Adjust constants to improve developer experience.
+
+```php
+    //  Default
+    const IS_HOOK_SIMU_ENABLED = false; # simulates a "save_record" hook on every page load
+    const IS_DUMP_ENABLED = false;  # dump method that requires "symfony/var-dumper"
+    const IS_ADDING_ENABLED = true; # save instances
+```
+
 Run `$ composer install` for formatted dumps.
 
 Credits to [Copy Data on Save](https://github.com/lsgs/redcap-copy-data-on-save) module.
