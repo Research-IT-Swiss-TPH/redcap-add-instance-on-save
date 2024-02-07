@@ -71,7 +71,6 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             $this->includePageJavascript($js_instructions);
         }
 
-
         if(self::IS_HOOK_SIMU_ENABLED) {
             //  Simulate Save (has to be triggered within record context, otherwise no ID)
             $this->simulate_save_hook();
@@ -177,9 +176,6 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             $destRecordId =  $instruction['matching-field'] == null ? $record :$sourceProjectFields[$instruction['matching-field']];
             //$this->dump($destRecordId);
 
-            // Skip if destination record does NOT exist
-
-
             $destProjectFields = REDCap::getData(array(
                 'return_format' => 'array', 
                 'project_id' => $destProjectId,
@@ -188,8 +184,8 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
                 'exportDataAccessGroups' => true
             ));
             
-            //  Skip if destination record exists
-            if( is_null($destProjectFields) ) continue;
+            //  Skip if destination record does NOT exist
+            if( empty($destProjectFields) ) continue;
             //$this->dump($destProjectFields);
             
             //  Calculate destination instance id from current count + 1

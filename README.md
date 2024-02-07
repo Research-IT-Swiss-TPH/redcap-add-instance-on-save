@@ -21,6 +21,18 @@ Multiple Field Pipings per Instruction can be added:
 - Destination Field: The target field where to value should be piped to. You can leave this empty if the destination field has the same name as the source field.
 - Instance ID Target: The field where to save information of currently added instance count/id.
 
+# Szenarios
+
+**Szenario 1: Add instance within same project**
+
+When "Destination Project" is same as the project wherein AIOS is triggered.
+Then a new instance of "Destination Form" will be created, if triggered from "Trigger Field" with a non-empty value   - EACH TIME the form containing trigger_field is saved.
+
+**Szenario 2: Add instance to another project**
+
+When "Destination Project" is NOT same as the project wherein AIOS is triggered.
+Then a new instance of "Destination Form" will be created, if triggered from "Trigger Field"  AND the matching record EXISTS - EACH TIME the form containing trigger_field is saved.
+
 ## Developer Notice
 Adjust constants to improve developer experience.
 Run `$ composer install` for formatted dumps.
