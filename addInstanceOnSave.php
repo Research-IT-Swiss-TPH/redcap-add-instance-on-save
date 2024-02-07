@@ -155,10 +155,10 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             $sourceProjectMeta = $Proj->metadata;
             //$this->dump($sourceProjectMeta);
 
-            //  Skip if trigger field exists in Source Project (redundant)
+            //  Skip if trigger field does NOT exist in Source Project
             if( !array_key_exists($instruction['trigger-field'] ,$sourceProjectMeta) ) continue;
 
-            //  Skip if trigger field is on current instrument page
+            //  Skip if trigger field is NOT on current instrument page
             if( $sourceProjectMeta[$instruction['trigger-field']]['form_name'] != $instrument ) continue;
 
             //  Get Source Project Trigger Field Value
@@ -176,6 +176,9 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
             //  Define destination record id
             $destRecordId =  $instruction['matching-field'] == null ? $record :$sourceProjectFields[$instruction['matching-field']];
             //$this->dump($destRecordId);
+
+            // Skip if destination record does NOT exist
+
 
             $destProjectFields = REDCap::getData(array(
                 'return_format' => 'array', 
@@ -245,14 +248,18 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
              * @since 1.1.0
              */            
             if($destInstanceId == 1) {
+
+                //  Add support for multiple redcap_data tables
+                $data_table = method_exists('\REDCap', 'getDataTable') ? \REDCap::getDataTable($destProjectId) : "redcap_data";
+
                 do {                    
                     $this->delete_duplicate_row(
                         $destProjectId, 
                         $destRecordId, 
-                        $destPrimaryKey
+                        $destPrimaryKey,
+                        $data_table
                     );                    
-                } while ($this->get_row_count($destProjectId, $destRecordId, $destPrimaryKey) > 1);
-
+                } while ($this->get_row_count($destProjectId, $destRecordId, $destPrimaryKey, $data_table) > 1);
             }
 
         }
@@ -311,8 +318,8 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
 
     }
 
-    private function get_row_count($pid, $record, $pk) {
-        $sql_select = 'SELECT record FROM redcap_data WHERE project_id=? AND record=? AND field_name=? AND instance IS NULL';
+    private function get_row_count($pid, $record, $pk, $data_table) {
+        $sql_select = 'SELECT record FROM '.$data_table.' WHERE project_id=? AND record=? AND field_name=? AND instance IS NULL';
         $result = $this->query($sql_select, [$pid, $record, $pk]);
         $rows = [];
         while($row = $result->fetch_object()) {
@@ -321,8 +328,8 @@ class addInstanceOnSave extends \ExternalModules\AbstractExternalModule {
         return count($rows);
     }
 
-    private function delete_duplicate_row($pid, $record, $pk) {
-        $sql_delete = 'DELETE FROM redcap_data WHERE project_id=? AND record=? AND field_name=? AND instance IS NULL LIMIT 1';
+    private function delete_duplicate_row($pid, $record, $pk, $data_table) {
+        $sql_delete = 'DELETE FROM '.$data_table.' WHERE project_id=? AND record=? AND field_name=? AND instance IS NULL LIMIT 1';
         $this->query($sql_delete, [$pid, $record, $pk]);
     }
 
